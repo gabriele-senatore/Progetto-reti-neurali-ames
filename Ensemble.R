@@ -189,6 +189,20 @@ brulee_wf <- workflow() %>%
   add_recipe(all_recipe) %>%
   add_model(brulee_model)
 
+pred <- predict(final_model, dat_test) %>%
+  bind_cols(dat_test)
+
+rmse(pred, truth = Sale_Price, estimate = .pred)
+mae(pred, truth = Sale_Price, estimate = .pred)
+rsq(pred, truth = Sale_Price, estimate = .pred)
+
+pred %>% 
+  ggplot(aes(x = Sale_Price, y = .pred)) +
+  geom_point(alpha = 0.5) +
+  geom_abline(lty = 2, color = "red") +
+  labs(title = "Rete neurale (25,25),LBFGS, f = tanh, penalty = 0.001, learn_rate = 0.01, epochs = 700 ", 
+       x = "Log Prezzo Reale", y = "Log Prezzo Predetto")
+
 
 ## Modello 2
 
@@ -218,7 +232,7 @@ pred %>%
   ggplot(aes(x = Sale_Price, y = .pred)) +
   geom_point(alpha = 0.5) +
   geom_abline(lty = 2, color = "red") +
-  labs(title = "Rete neurale (8),LBFGS, f = relu, penalty = 0.001, learn_rate = 0.01, epochs = 500 ", 
+  labs(title = "Rete neurale (8),LBFGS, f = gelu, penalty = 0.001, learn_rate = 0.01, epochs = 500 ", 
        x = "Log Prezzo Reale", y = "Log Prezzo Predetto")
 
 
